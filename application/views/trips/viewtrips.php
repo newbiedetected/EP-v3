@@ -23,9 +23,8 @@
       <div class="container-fluid" style="text-align: right">
         <a href="<?php echo base_url().'dashboard/viewprofile'; ?>" class="btn btn-primary btn-lg" ">Back</a>
       </div>
-      <div class="container-fluid" style="color: white; padding: 20px; text-align: center">
-
-          <label style="font-size: 50px; font-weight: bold; ">MY TRIPS</h1>
+      <div class="container-fluid" style="color: white; padding: 20px; text-align: center;">
+          <label style="font-size: 50px; font-weight: bold; ">MY TOURS</label>
       </div>
       <div class="container" >
         <center><?php
@@ -54,10 +53,11 @@
               foreach($trips as $post){
 
           ?>
+          <?php if($post->user==$this->session->userdata('post_name') && $post->tourStatus=='approved'):?>
           <div class="col-md-6">
-          <?php if($post->user==$this->session->userdata('post_name')):?>
+
             <div class="container" id="posts">
-              <?php echo '<h2 >'.$post->name.'</h2>'; ?>
+              <?php echo '<h2 >'.$post->tourname.'</h2>'; ?>
                <?php echo '<label style="font-size:15px;"> Destination: '.$post->destination.'</label>'; ?><br/>
               <?php 
                 if($tourist){
@@ -67,7 +67,7 @@
                   <?php if($post->destination==$img->tourist_name):?>
                     <img style="width: 100%;"; src="<?php echo base_url().'assets/upload/'.$img->ts_image;?>">
                     <?php echo '<label style="font-size:15px;"> Address: '.$img->address.'</label>'; ?><br/>
-                    <?php echo '<label style="font-size:15px;"> Estimated Expenses: '.$img->price.'</label>'; ?><br/>
+                    
                   <?php endif;?>
                 
                 <?php
@@ -77,13 +77,142 @@
 
              
               <?php echo '<label style="font-size:15px;"> Origin: '.$post->origin.'</label>'; ?><br/>
-              <?php echo '<label style="font-size:15px;"> Date: '.$post->date.'</label>'; ?><hr/>
-              <a href="<?php echo base_url('dashboard/editTrip/'.$post->id); ?>" class="btn btn-success">Edit Trip</a>
-              <a href="<?php echo base_url('dashboard/cancelTrip/' .$post->id) ?>" class="btn btn-danger" onclick="return confirm('Do you want to cancel this trip?');">Cancel Trip</a>
+              <?php echo '<label style="font-size:15px;"> Date: '.$post->tourdate.'</label>'; ?><hr/>
+              <a href="<?php echo base_url('trips/displaytrip/'.$this->session->userdata('post_name'). '/'.$post->tripIdNumber); ?>" class="btn btn-primary btn-sm">View Trip</a>
+              <a href="<?php echo base_url('dashboard/cancelTrip/' .$post->tripIdNumber) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to cancel this trip?');">Cancel Trip</a>
 
             </div>
+             </div>  
           <?php endif;?>
-          </div>  
+         
+          <?php
+            }
+          }
+        ?>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+       <div class="container-fluid" style="color: white; padding: 20px; text-align: center;">
+          <label style="font-size: 50px; font-weight: bold; ">Joined Tours</label>
+       </div>
+       
+        <div class="container-fluid" style="text-align: center">
+           <div class="group row">
+            <?php if($joined):?>
+              <?php foreach($joined as $join):?>
+                  <?php if($trips):?>
+                    <?php foreach($trips as $trip):?>
+                      <?php if($join->tripIdNumber == $trip->tripIdNumber):?>
+                             <div class="col-md-6">
+
+                                    <div class="container" id="posts">
+                                      <?php echo '<h2 >'.$trip->tourname.'</h2>'; ?>
+                                       <?php echo '<label style="font-size:15px;"> Destination: '.$trip->destination.'</label>'; ?><br/>
+                                      <?php 
+                                        if($tourist){
+                                          foreach($tourist as $img){
+
+                                      ?>
+                                          <?php if($trip->destination==$img->tourist_name):?>
+                                            <img style="width: 100%;"; src="<?php echo base_url().'assets/upload/'.$img->ts_image;?>">
+                                            <?php echo '<label style="font-size:15px;"> Address: '.$img->address.'</label>'; ?><br/>
+                                            
+                                          <?php endif;?>
+                                        
+                                        <?php
+                                          }
+                                        }
+                                      ?>
+                                      <?php $var=$trip->tourfee;?>
+                                      <?php $var2=$trip->tourparticipant;?>
+                                      <?php $var3=$var/$var2;?>
+                                      <?php echo '<label style="font-size:15px;"> Origin: '.$trip->origin.'</label>'; ?><br/>
+                                      <?php echo '<label style="font-size:15px;"> Date: '.$trip->tourdate.'</label>'; ?><br/>
+                                      <?php echo '<label style="font-size:15px;"> Reservation Fee: '.$var3.'</label>'; ?><hr/>
+                                      <a href="<?php echo base_url('trips/displaymember/'.$this->session->userdata('post_name'). '/'.$join->tripIdNumber.'/'.$trip->leader); ?>" class="btn btn-primary btn-sm">View Trip</a>
+                                      
+                                    </div>
+                          </div> 
+                          
+                       <?php endif;?> 
+
+                  <?php endforeach;?>
+                <?php endif;?>
+              <?php endforeach;?>
+            <?php endif;?>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       <div class="container-fluid" style="color: white; padding: 20px; text-align: center;">
+          <label style="font-size: 50px; font-weight: bold; ">Unapproved Tours</label>
+      </div>
+      <div class="container-fluid" style="text-align: center">
+          <div class="group row">
+          <?php 
+            if($trips){
+              foreach($trips as $post){
+
+          ?>
+          <?php if($post->user==$this->session->userdata('post_name') && $post->tourStatus=='not approved'):?>
+          <div class="col-md-6">
+
+            <div class="container" id="posts">
+              <?php echo '<h2 >'.$post->tourname.'</h2>'; ?>
+               <?php echo '<label style="font-size:15px;"> Destination: '.$post->destination.'</label>'; ?><br/>
+              <?php 
+                if($tourist){
+                  foreach($tourist as $img){
+
+              ?>
+                  <?php if($post->destination==$img->tourist_name):?>
+                    <img style="width: 100%;"; src="<?php echo base_url().'assets/upload/'.$img->ts_image;?>">
+                    <?php echo '<label style="font-size:15px;"> Address: '.$img->address.'</label>'; ?><br/>
+                    
+                  <?php endif;?>
+                
+                <?php
+                  }
+                }
+              ?>
+
+             
+              <?php echo '<label style="font-size:15px;"> Origin: '.$post->origin.'</label>'; ?><br/>
+              <?php echo '<label style="font-size:15px;"> Date: '.$post->tourdate.'</label>'; ?><hr/>
+             
+
+            </div>
+             </div>  
+          <?php endif;?>
+         
           <?php
             }
           }

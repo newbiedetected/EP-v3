@@ -30,13 +30,10 @@
 	</head>
 	<body>
 		<div class="container-fluid" style="width: 100%; text-align: right; padding-top: 10px" >
-			<a href="<?php echo base_url().'dashboard/user'; ?>" class="btn btn-success btn-lg" ">Home</a>
-			<a href="<?php echo base_url().'Trips/makeTrip'; ?>" class="btn btn-primary btn-lg" ">Make Trip</a>
-			<a href="<?php echo base_url().'dashboard/account'; ?>" class="btn btn-warning btn-lg" ">Account</a>
-
-		</div>
-		<div class="container-fluid" style="width: 100%; text-align: right; padding-top: 10px" >
-			<a href="<?php echo base_url().'dashboard/viewtrips'; ?>" class="btn btn-dark btn-lg" ">My Trips</a>
+			<a href="<?php echo base_url().'dashboard/user'; ?>" class="btn btn-success " ">Home</a>
+			<a href="<?php echo base_url().'tours/maketour/' .$this->session->userdata('post_name'); ?>" class="btn btn-danger " ">Make your own trip</a>
+			<a href="<?php echo base_url().'dashboard/account/' .$this->session->userdata('post_name'); ?>" class="btn btn-warning " ">Account</a>
+			<a href="<?php echo base_url().'dashboard/viewtrips'; ?>" class="btn btn-primary " ">My Trips</a>
 
 		</div>
 		<br/><br/>

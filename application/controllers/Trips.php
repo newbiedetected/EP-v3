@@ -11,13 +11,13 @@
         	$data['spots']=$this->m->getTourist();
         	$data['trips']=$this->m->getTrip();
           $data['origin']=$this->m->getOrigin();
-          $this->load->view('trips/maketrip',$data);
+          $this->load->view('trips/maketour',$data);
        }
 
     }
     public function addTrip(){
       if ($this->session->userdata('u_id')=='2') {
-    	$result = $this->m->make_trip();
+    	$result['data'] = $this->m->make_trip();
 	      if($result){
 	          $this->session->set_flashdata('success_msg', 'Trip added successfully.');
 	      }
@@ -27,6 +27,15 @@
 	      redirect(base_url() . 'Trips/makeTrip');
       }
     }
+    public function maketour(){
+       if ($this->session->userdata('u_id')=='2') {
+          $data['spots']=$this->m->getTourist();
+          $data['trips']=$this->m->getTrip();
+          $data['origin']=$this->m->getOrigin();
+          $this->load->view('tour/make_tour',$data);
+       }
+    }
+   
     public function updateTrip(){
       if ($this->session->userdata('u_id')=='2') {
             $result = $this->m->updateTrip();
@@ -109,4 +118,48 @@
           }
           redirect(base_url() . 'Trips/city');
     }
+    public function viewTrips(){
+
+       if ($this->session->userdata('u_id')=='2') {
+          $data['tours'] = $this->m->getTours();
+          //print_r($data['tours']);
+          //echo " --------------- ";
+          $data['tourist'] = $this->m->getTouristSpot();
+          $username=$this->session->userdata('post_name');
+          $data['members'] = $this->m->getmembership($username);
+          //echo " --------------- ";
+          //print_r($data['members']);  
+          $data['request'] = $this->m->getRequest($username);
+         // echo " --------------- ";
+         // print_r($data['request']); exit();
+          $this->load->view('trips/userTrips',$data);
+      }
+    }
+
+  
+   // public function pakita($id){
+    //   if ($this->session->userdata('u_id')=='2') {
+     //     $data['tourist'] = $this->m->getTouristSpot();
+     //       $data['post'] = $this->m->pakita($id);
+    //        $this->load->view('trips/pakita', $data);
+      //  }
+   // }
+    public function displaytrip($user, $tripId){
+      $data['tours']=$this->m->displaytrip($tripId);
+      $data['members']=$this->m->getMembers($tripId);
+      $data['request']=$this->m->getRequestMembers($tripId);
+      $data['comment']=$this->m->getComment($tripId);
+      $this->load->view('tours/displaytour',$data);
+
+    }
+    public function displaymember($user, $tripId,$leader){
+        $data['leader']=$this->m->getLeader($leader,$tripId);
+        $data['tours']=$this->m->displaytrip($tripId);
+        $data['members']=$this->m->getMembers($tripId);
+        $data['comment']=$this->m->getComment($tripId);
+        $this->load->view('tours/displaymember',$data);
+
+
+    }
+
 }

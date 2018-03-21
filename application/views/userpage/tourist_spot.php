@@ -49,7 +49,7 @@
 						<?php endif?>
 						<hr/>
 						<?php echo '<label style="font-size:15px;">'.$spot->address.'</label>'; ?>
-						<?php echo '<label style="font-size:15px;">Estimated Expenses: PHP '.$spot->price.'</label>'; ?><br/>
+						<br/>
 					</div>
 				</div>
 				<?php

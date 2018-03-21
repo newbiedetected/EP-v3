@@ -42,6 +42,8 @@
 	function adminpost(){
 	   	if($this->session->userdata('u_id')=='1') {
 		   	$data['posts'] = $this->m->viewprof();
+		   	$data['verify'] = $this->m->verify();
+		   	$data['verifyTour'] = $this->m->verifyTour();
 		    $this->load->view('adminpage/adminview',$data);
 	 	}
 		elseif($this->session->userdata('u_id')=='2'){
@@ -154,6 +156,8 @@
 			$data['item'] = $this->m->info($post_name);
 			$data['trips'] = $this->m->trips($post_name);
 			$data['tourist'] = $this->m->getTouristSpot();
+		   	$data['verify'] = $this->m->verifyById($post_name);
+		   	$data['verifyTour'] = $this->m->verifyTourById($post_name);
 		    $this->load->view("adminpage/profile",$data);
 		}
         elseif($this->session->userdata('u_id')=='2'){

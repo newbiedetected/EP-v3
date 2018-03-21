@@ -8,10 +8,23 @@
     	}      
 
     	public function user(){
+           $getSession = $this->m->getSession($this->session->userdata('post_name'));
+                if ($getSession) {
+                 
+                 $check_session = array(
+                                'request' => '2',
+                                
+                 ); 
+                $this->session->set_userdata($check_session);
+          }
+          //print_r($this->session->userdata('request'));exit();
+
           if ($this->session->userdata('u_id')=='2') {
              $data['posts'] = $this->m->getPost();
              $data['spots'] = $this->m->getTouristSpot();
              $data['editors'] = $this->m->getEp();
+             $data['account'] = $this->m->getAccount($this->session->userdata('post_name'));
+             //print_r($data['account']);exit();
              $this->load->view("userpage/users" ,$data);
 
           }            
@@ -34,10 +47,30 @@
           $data['editors'] = $this->m->getEp();
          $this->load->view('userpage/editorspick',$data);
       }
-      public function account(){
+      public function account($username){
         $account['data']=$this->m->account();
+        $account['verify']=$this->m->verify($username);
+        if ($account) {
+            $x = 0;
+            $count= -1;
+            $aydee = array();
+            foreach ($account['verify'] as $result) {
+                $aydee[] = $result->id;
+                $count++;
+            }
+            if ($count>=0) {
+              $latest=$aydee[$count];
+              $account['latest']=$this->m->getLatest($latest);
+            }
+            else{
+              $latest=0;
+              $account['latest']=$this->m->getLatest($latest);
+            }
+           
+        }       
         $this->load->view('userpage/account',$account);
       }
+     
       public function editaccount($username){
         $account['data']=$this->m->editaccount($username);
         $this->load->view('userpage/editaccount',$account);
@@ -53,12 +86,6 @@
                   $this->session->set_flashdata('error_msg', 'Post failed to add!');
               }
               redirect(base_url() . 'dashboard/user');
-          }
-          elseif($this->session->userdata('u_id')=='1'){
-              redirect(base_url() . 'gomenasai/bakana');
-          }
-          else{
-              redirect(base_url());
           }
 
     }
@@ -196,7 +223,7 @@
             $this->session->set_flashdata('success_msg', 'Account Updated Successfully');
         }
        
-           redirect(base_url('dashboard/account'));
+           redirect(base_url('dashboard/account/').$this->session->userdata('post_name'));
         }
         elseif($this->session->userdata('u_id')=='1'){
             redirect(base_url() . 'gomenasai/bakana');
@@ -259,23 +286,16 @@
      if ($this->session->userdata('u_id')=='2') {
       $data['trips'] = $this->m->getTrips();
       $data['tourist'] = $this->m->getTouristSpot();
+      $data['joined'] = $this->m->getJoined($this->session->userdata('post_name'));
       $this->load->view('trips/viewtrips',$data);
     }
   }
 
 
-  public function editTrip($id){
-        if ($this->session->userdata('u_id')=='2') {
-          $data['spots']=$this->m->getTourist();
-          $data['origin']=$this->m->getOrigin();
-          $data['trips'] = $this->m->getTripsById($id);
-          $this->load->view('trips/editTrip', $data);
-        }
-    }
 
-    public function cancelTrip($id){
+    public function cancelTrip($tripIdNumber){
       if($this->session->userdata('u_id')=='2') {
-        $result = $this->m->cancelTrip($id);
+        $result = $this->m->cancelTrip($tripIdNumber);
         redirect(base_url('dashboard/viewtrips'));
       }
     } 

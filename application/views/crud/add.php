@@ -56,12 +56,7 @@
 					<input type="text" name="txt_address" class="form-control" required>
 				</div>
 			</div>
-			<div class="form-group row">
-				<label for="city_name" class="col-md-2 text-center">Estimated Expenses</label>
-				<div class="col-md-10">
-					<input type="number" name="txt_price" class="form-control" placeholder="Php" min="100" max="500000" required>
-				</div>
-			</div>
+			
 
 			<div class="form-group row">
 				<label class="col-md-2 text-center">Upload Image</label>
